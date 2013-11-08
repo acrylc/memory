@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+	<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>Sockettester</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+		$(document).ready(function() {
+			var canvas = document.getElementById("c");
+			var ctx = canvas.getContext("2d");
+			
+			var ws = new WebSocket("ws://" + window.location.host + "/p5websocket");
+
+			ws.onopen = function () {
+			  ws.send('Ping');
+			};
+			
+			ws.onerror = function (error) {
+				console.log(error)
+			};
+
+			var img;
+			ws.onmessage = function (e) {
+				var image = new Image();
+				image.src = 'data:image/jpg;base64,'+e.data
+				image.onload = function() {
+					ctx.drawImage(image, 0, 0, 640, 480)
+				}
+			}
+		})
+			
+						
+		</script>
+	</head>
+	<body>
+		<div id="test-target">
+			
+		</div>
+		<canvas id="c" width="640", height="480"></canvas>
+	</body>
+</html>
